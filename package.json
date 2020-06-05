@@ -1,0 +1,15 @@
+{
+  "name": "saidp-sdk-js",
+  "version": "1.0.1",
+  "description": "SecureAuth IdP SDK for JavaScript",
+  "main": "SecureAuth.js",
+  "exports": "SecureAuth.js",
+  "author": "Sean Dyon",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
+    "moment": "^2.26.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "Test APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Sean Dyon",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
