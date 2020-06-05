@@ -31,6 +31,6 @@ node index.js
 
 * Execute url, replacing `{test_user}` with the actual user and without brackets: http://localhost:3000/api/user/{test_user}/profile
 
-![Example](/images/example.png)
+![Example](/test/images/example.png)
 
 ---
