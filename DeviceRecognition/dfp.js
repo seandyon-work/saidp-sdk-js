@@ -21,15 +21,14 @@ class DfpEndpoint {
     }
 
     validateDfp = async (user, ip_address, fingerprint) => {
-        let jsonResponse = { "user_id": user, "host_address": ip_address, "fingerprint": fingerprint };
-        await this.#client.post(postData, this.#validate).then(res => jsonResponse = res);
-        return jsonResponse;
+        let postData = { "user_id": user, "host_address": ip_address, "fingerprint": fingerprint };
+        console.log(postData.fingerprint);
+        return await this.#client.post(postData, this.#validate);
     }
 
     ConfirmDfp = async (user, fingerprint_id) => {
-        let jsonResponse = { "user_id": user, "fingerprint_id": fingerprint_id };
-        await this.#client.post(postData, this.#confirm).then(res => jsonResponse = res);
-        return jsonResponse;
+        let postData = { "user_id": user, "fingerprint_id": fingerprint_id };
+        return await this.#client.post(postData, this.#confirm);
     }
 
 }

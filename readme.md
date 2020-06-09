@@ -5,6 +5,7 @@ SecureAuth IdP SDK for JavaScript
 ---
 ## Configuration:
 
+* SecureAuth Realm setup with API Access
 * `.env` is required. Please update with your configuration details.
 
 Before First Run:

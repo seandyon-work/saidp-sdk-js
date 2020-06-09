@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "SecureAuth IdP SDK for JavaScript",
   "main": "SecureAuth.js",
-  "exports": "SecureAuth.js",
+  "exports": "./SecureAuth.js",
   "author": "Sean Dyon",
   "license": "BSD-3-Clause",
   "dependencies": {
