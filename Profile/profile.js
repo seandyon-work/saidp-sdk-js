@@ -1,4 +1,6 @@
 
+const IdmEndpoint = require('../IdM/idm').IdmEndpoint;
+
 class UserEndpoint {
     // declaring private variables
     #client = {};
@@ -11,6 +13,7 @@ class UserEndpoint {
         // public
         this.UserStatusEnum = { lock:"lock", unlock:"unlock", enable:"enable", disable:"disable" };
         Object.freeze(apiEndpointEnum);
+        this.idm = new IdmEndpoint(apiClient, apiEndpointEnum);
      }
 
      getUserProfile = async (user) => {
@@ -34,7 +37,6 @@ class UserEndpoint {
         let postData = { "status": status };
         return await this.#client.post(postData, url);
     }
-
     //#endregion
 }
 

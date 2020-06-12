@@ -25,6 +25,10 @@ router.get('/user/:user/pwd/:pwd', function(req, res) {
     api.auth.validatePassword(req.params.user, req.params.pwd).then(result => res.json(result)); 
 })
 
+router.get('/user/:user/pwd/:pwd/reset', function(req, res) {    
+    api.profile.idm.resetPassword(req.params.user, req.params.pwd).then(result => res.json(result)); 
+})
+
 router.get('/user/:user/phone/:phone', function(req, res) {
     api.auth.sendSMSOTP(req.params.user, req.params.phone).then(result => res.json(result));
 })
@@ -37,7 +41,7 @@ router.get('/ipeval/:user', function(req,res) {
     // check ip from request header if behind proxy, then remoteAddress
     let ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
     // check if local ip address, then use an ip for testing
-    if (ip === '127.0.0.1' || ip === '::1') { ip = '162.247.72.201' }
+    if (ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1') { ip = '162.247.72.201' }
     api.adaptive.evaluateIP(req.params.user, ip).then(request => res.json(request));
 })
 
