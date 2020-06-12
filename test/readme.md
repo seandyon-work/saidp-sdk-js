@@ -12,14 +12,14 @@ Before First Run:
 - Run `npm i` in both the root sdk folder and test folder.
 
 Example Configuration:
-```zsh
+```Java
 applianceHost=company.secureauth.com
 appliancePort=443
 applianceSSL=true
 selfSigned=false
 realm=SecureAuth1
-applicationID=af1b351845ec47968b27debd9cd4ce53
-applicationKey=101db0347fdf71dab63cd965b8782ff6ba0f8f1c91e8cf52f970d1267e0fb453
+applicationID=your_appid
+applicationKey=your_appkey
 ```
 
 ---

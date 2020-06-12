@@ -21,8 +21,8 @@ appliancePort=443
 applianceSSL=true
 selfSigned=false
 realm=SecureAuth1
-applicationID=your_id
-applicationKey=your_key
+applicationID=your_appid
+applicationKey=your_appkey
 ```
 
 ---
