@@ -13,8 +13,8 @@ class Configuration {
     constructor() {
         this.applianceHost = process.env.applianceHost;
         this.appliancePort = process.env.appliancePort;
-        this.applianceSSL = process.env.applianceSSL;
-        this.selfSigned = process.env.selfSigned;
+        this.applianceSSL = (process.env.applianceSSL === 'true');
+        this.selfSigned = (process.env.selfSigned === 'true');
         this.realm = process.env.realm;
         this.applicationID = process.env.applicationID;
         this.applicationKey = process.env.applicationKey;
@@ -25,6 +25,7 @@ class Configuration {
 
 class HmacSigningHandler {
     constructor(method, appId, appKey, realm, apiVersoin, endpoint, postData) {
+        
         this.utcExtTimeStamp =  moment.utc().format('ddd, DD MMM YYYY HH:mm:ss.SSS') + ' GMT';
         if(method === 'GET') {
             this.payload = [method, this.utcExtTimeStamp, appId, '/'+realm+'/'+apiVersoin+'/'+endpoint].join("\n");
@@ -41,7 +42,7 @@ class HmacSigningHandler {
     }
 
     getHeaders() {
-    return {'Authorization': 'Basic ' + this.authHeader,
+        return {'Authorization': 'Basic ' + this.authHeader,
         'X-SA-Ext-Date': this.utcExtTimeStamp,
         'Content-type': 'application/json; charset=UTF-8' }
     }
@@ -56,10 +57,25 @@ class ApiClient {
         this.agent = new https.Agent({  
             rejectUnauthorized: false
            });
-        
-        this.instance = axios.create({
-            baseURL: "https://" + this.config.applianceHost + "/" + this.config.realm + "/" + this.config.apiVersion + "/",
-          });
+
+        let url = {};
+
+        if(this.config.applianceSSL === true) {
+            url = 'https://' + this.config.applianceHost + ':' + this.config.appliancePort + '/'  + this.config.realm + '/' + this.config.apiVersion + '/';
+        } else {
+            url = 'http://' + this.config.applianceHost + ':' + this.config.appliancePort + '/'  + this.config.realm + '/' + this.config.apiVersion + '/';
+        }
+
+        if(this.config.selfSigned === true) { 
+            this.instance = axios.create({
+                baseURL: url,
+                httpsAgent: this.agent
+              });
+        } else { 
+            this.instance = axios.create({
+                baseURL: url
+              });
+        }
     }
     
     get = async (apiEndPoint, endpointEnum) => {
@@ -69,27 +85,15 @@ class ApiClient {
 
         let jsonResponse = {};
 
-        if(this.config.selfSigned === true) {
-            await this.instance.get(url, {
-                headers: hmac.getHeaders(), httpsAgent: this.agent }).then(response => {
-            console.log(response.data);
-            jsonResponse = response.data;
-            })
-            .catch(error => {
-            console.log(error);
-            jsonResponse = response.data;
-            });
-        } else {
-            await this.instance.get(url, {
-                headers: hmac.getHeaders() }).then(response => {
-            console.log(response.data);
-            jsonResponse = response.data;
-            })
-            .catch(error => {
-            console.log(error);
-            jsonResponse = response.data;
-            });
-        }
+        await this.instance.get(url, { headers: hmac.getHeaders() }).then(response => {
+        console.log(response.data);
+        jsonResponse = response.data;
+        })
+        .catch(error => {
+        console.log(error);
+        jsonResponse = response.data;
+        });
+        
         return jsonResponse;
     }
 
@@ -100,27 +104,14 @@ class ApiClient {
 
         let jsonResponse = {};
 
-        if(this.config.selfSigned === true) {
-            await this.instance.post(url, postData, {
-                headers: hmac.getHeaders() }).then(response => {
-              console.log(response.data);
-              jsonResponse = response.data;
-            })
-            .catch(error => {
-              console.log(error);
-              jsonResponse = response.data;
-            });
-         } else { 
-            await this.instance.post(url, postData, {
-                headers: hmac.getHeaders(), httpsAgent: this.agent }).then(response => {
-              console.log(response.data);
-              jsonResponse = response.data;
-            })
-            .catch(error => {
-              console.log(error);
-              jsonResponse = response.data;
-            });
-         }
+        await this.instance.post(url, postData, { headers: hmac.getHeaders() }).then(response => {
+            console.log(response.data);
+            jsonResponse = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+            jsonResponse = response.data;
+        });
 
         return jsonResponse;
     }
