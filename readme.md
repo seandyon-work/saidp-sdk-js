@@ -11,17 +11,18 @@ SecureAuth IdP SDK for JavaScript
 Before First Run:
 - Copy `.env.example` -> `.env` and modify to your needs.
 - Ensure the `.env` file is located with your web server.
+- Run `npm i` in both the root sdk folder.
 - Refer to test folder for examples.
 
 Example Configuration:
-```zsh
+```Java
 applianceHost=company.secureauth.com
 appliancePort=443
 applianceSSL=true
 selfSigned=false
 realm=SecureAuth1
-applicationID=af1b351845ec47968b27debd9cd4ce53
-applicationKey=101db0347fdf71dab63cd965b8782ff6ba0f8f1c91e8cf52f970d1267e0fb453
+applicationID=your_id
+applicationKey=your_key
 ```
 
 ---
@@ -37,6 +38,12 @@ api.auth.validateUser('test_user').then(result => /* do something with result */
 
 // get users MFA Factors
 api.profile.getUserMFAFactors('test_user').then(result => /* do something with result */ );
+
+// Reset Password
+api.profile.idm.resetPassword('test_user', 'test_password').then(result => /* do something with result */ );
+
+// Evaluate IP Address
+api.adaptive.evaluateIP('test_user', '8.8.8.8').then(request => /* do something with result */ );
 
 ```
 ---

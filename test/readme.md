@@ -9,6 +9,7 @@ SecureAuth IdP SDK for JavaScript
 
 Before First Run:
 - Copy `.env.example` -> `.env` and modify to your needs.
+- Run `npm i` in both the root sdk folder and test folder.
 
 Example Configuration:
 ```zsh
