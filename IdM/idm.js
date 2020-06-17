@@ -23,6 +23,15 @@ class IdmEndpoint {
         return await this.#client.post(postData, url);
      }
 
+     createUser = async (profileProperties) => {
+         return await this.#client.post(profileProperties, this.#endpointEnum);
+     }
+
+     updateUserProfile = async (user, updateProfileProperties) => {
+        let url = this.#endpointEnum + '/' + user;
+        return await this.#client.post(updateProfileProperties, url);
+     }
+
 }
 
 module.exports = {

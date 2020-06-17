@@ -1,19 +1,20 @@
 
-const apiClient = require('./ApiClient').ApiClient
-const apiEndpointEnum = require('./ApiClient').apiEndpointEnum
+const  { ApiClient, apiEndpointEnum } = require('./ApiClient');
 
-const AuthEndpoint = require('./Auth/auth').AuthEndpoint
-const UserEndpoint = require('./Profile/profile').UserEndpoint
-const DfpEndpoint = require('./DeviceRecognition/dfp').DfpEndpoint
-const AdaptiveEndpoint = require('./Adaptive/adaptive').AdaptiveEndpoint
+const { AuthEndpoint } = require('./Auth/auth');
+const { UserEndpoint } = require('./Profile/profile');
+const { DfpEndpoint } = require('./DeviceRecognition/dfp');
+const { AdaptiveEndpoint } = require('./Adaptive/adaptive');
+const { Models } = require('./models/models');
 
 class SecureAuth  {
     // constructor for the SecureAuth class
     constructor() {
-        this.auth = new AuthEndpoint(apiClient, apiEndpointEnum);
-        this.profile = new UserEndpoint(apiClient, apiEndpointEnum);
-        this.dfp = new DfpEndpoint(apiClient, apiEndpointEnum);
-        this.adaptive = new AdaptiveEndpoint(apiClient, apiEndpointEnum);
+        this.auth = new AuthEndpoint(ApiClient, apiEndpointEnum);
+        this.profile = new UserEndpoint(ApiClient, apiEndpointEnum);
+        this.dfp = new DfpEndpoint(ApiClient, apiEndpointEnum);
+        this.adaptive = new AdaptiveEndpoint(ApiClient, apiEndpointEnum);
+        this.models = new Models();
     }
 }
 

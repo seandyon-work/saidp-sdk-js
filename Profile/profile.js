@@ -1,5 +1,5 @@
 
-const IdmEndpoint = require('../IdM/idm').IdmEndpoint;
+const { IdmEndpoint } = require('../IdM/idm');
 
 class UserEndpoint {
     // declaring private variables
