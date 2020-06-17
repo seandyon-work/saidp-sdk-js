@@ -30,7 +30,7 @@ applicationKey=your_appkey
 
 ```JavaScript
 
-const SecureAuth = require('../SecureAuth').SecureAuth
+const { SecureAuth } = require('../SecureAuth')
 const api = new SecureAuth();
 
 // validate user account
@@ -44,6 +44,16 @@ api.profile.idm.resetPassword('test_user', 'test_password').then(result => /* do
 
 // Evaluate IP Address
 api.adaptive.evaluateIP('test_user', '8.8.8.8').then(request => /* do something with result */ );
+
+// Create User
+let model = api.models;
+model.profileProperties.userId = 'test_user3';
+model.profileProperties.password = 'test';
+model.profileProperties.properties.firstName = "Test";
+model.profileProperties.properties.lastName = "User";
+model.profileProperties.properties.phone1 = '123-456-7890';
+model.profileProperties.properties.email1 = 'test@test.com';
+api.profile.idm.createUser(model.profileProperties).then(request => /* do something with result */ );
 
 ```
 ---
