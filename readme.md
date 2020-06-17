@@ -5,7 +5,7 @@ SecureAuth IdP SDK for JavaScript
 ---
 ## Configuration:
 
-* SecureAuth Realm setup with API Access
+* SecureAuth Realm setup with API Access: https://docs.secureauth.com/display/IPD/Authentication+API+guide
 * `.env` is required. Please update with your configuration details.
 
 Before First Run:
@@ -20,10 +20,13 @@ applianceHost=company.secureauth.com
 appliancePort=443
 applianceSSL=true
 selfSigned=false
+debug=false
 realm=SecureAuth1
 applicationID=your_appid
 applicationKey=your_appkey
 ```
+
+- Debug enables additional logging to console
 
 ---
 ## Usage:
