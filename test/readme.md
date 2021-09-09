@@ -10,7 +10,7 @@ SecureAuth IdP SDK for JavaScript
 
 Before First Run:
 - Copy `.env.example` -> `.env` and modify to your needs.
-- Run `npm i` in both the root sdk folder and test folder.
+- Run `npm i` or `yarn` in both the root sdk folder and test folder.
 
 Example Configuration:
 ```Java
@@ -22,6 +22,8 @@ debug=false
 realm=SecureAuth1
 applicationID=your_appid
 applicationKey=your_appkey
+titanUser=titan_user
+titanPass=titan_pass
 ```
 
 ---
