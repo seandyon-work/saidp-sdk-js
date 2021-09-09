@@ -24,6 +24,8 @@ debug=false
 realm=SecureAuth1
 applicationID=your_appid
 applicationKey=your_appkey
+titanUser=titan_user
+titanPass=titan_pass
 ```
 
 - Debug enables additional logging to console
@@ -57,6 +59,14 @@ model.profileProperties.properties.lastName = "User";
 model.profileProperties.properties.phone1 = '123-456-7890';
 model.profileProperties.properties.email1 = 'test@test.com';
 api.profile.idm.createUser(model.profileProperties).then(request => /* do something with result */ );
+
+// Enroll TOTP Device
+let oathSeed = '1AAAAAAAAAAAAAAAAAA22AAAA2AAAAA1';
+let deviceName = 'Example Hard Token';
+api.enroll.enrollTOTP('test_user', oathSeed, deviceName).then(request => /* do something with result */ );
+
+// Generate QR Code for App Enrollment
+api.enroll.generateQRCode('test_user').then(request =>  /* do something with result */ );
 
 ```
 ---
