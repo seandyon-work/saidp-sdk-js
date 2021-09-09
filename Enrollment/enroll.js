@@ -10,7 +10,7 @@ class EnrollEndpoint {
     
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
      }
 
      getEnrollments = async (user) => {

@@ -11,11 +11,12 @@ const { Models } = require('./models/models');
 class SecureAuth  {
     // constructor for the SecureAuth class
     constructor() {
-        this.auth = new AuthEndpoint(ApiClient, apiEndpointEnum);
-        this.profile = new UserEndpoint(ApiClient, apiEndpointEnum);
-        this.dfp = new DfpEndpoint(ApiClient, apiEndpointEnum);
-        this.adaptive = new AdaptiveEndpoint(ApiClient, apiEndpointEnum);
-        this.enroll = new EnrollEndpoint(ApiClient, apiEndpointEnum);
+        this.apiClient = new ApiClient();
+        this.auth = new AuthEndpoint(this.apiClient, apiEndpointEnum);
+        this.profile = new UserEndpoint(this.apiClient, apiEndpointEnum);
+        this.dfp = new DfpEndpoint(this.apiClient, apiEndpointEnum);
+        this.adaptive = new AdaptiveEndpoint(this.apiClient, apiEndpointEnum);
+        this.enroll = new EnrollEndpoint(this.apiClient, apiEndpointEnum);
         this.models = new Models();
     }
 }

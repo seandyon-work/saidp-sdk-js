@@ -8,7 +8,7 @@ class UserEndpoint {
     
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
         this.#endpointEnum = apiEndpointEnum.users;
         // public
         this.UserStatusEnum = { lock:"lock", unlock:"unlock", enable:"enable", disable:"disable" };

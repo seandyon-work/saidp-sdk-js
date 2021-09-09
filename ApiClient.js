@@ -53,10 +53,47 @@ class HmacSigningHandler {
 
 }
 
+class TitanToken {
+    
+    constructor(config) {
+        this.config = config;
+        this.expire = moment(new Date()).subtract(1, 'm');
+        this.token = {};
+    }
+
+    getToken = async() => {
+        if(this.expire.isBefore(moment(new Date(), 'h:mma'))) {
+            console.log('in options');
+            const options = {
+                url: 'https://us-services.secureauth.com/oauth/v1/token',
+                method: 'post',
+                auth: {
+                    username: this.config.titanUser,
+                    password: this.config.titanPass,
+                    },
+                    data: 'grant_type=client_credentials' 
+                };
+                    
+            const resp = await axios(options);
+            const decoded_token = jtw_decode(resp.data.access_token);
+            console.log(resp.data);
+            this.token = resp.data.access_token;
+            this.expire = moment(new Date()).add(resp.data.expires_in, 's');
+            console.log(this.expire.toDate())
+        }
+        return this.token;
+    }
+
+    validateToken() {
+
+    }
+}
+
 class ApiClient {
 
     constructor() {
         this.config = new Configuration();
+        this.titanToken = new TitanToken(this.config);
 
         this.agent = new https.Agent({  
             rejectUnauthorized: false
@@ -84,30 +121,21 @@ class ApiClient {
 
     getMobileSvc = async (apiEndPoint, endpointEnum) => {
 
-        let jsonResponse = {};
+        this.access_token = await this.titanToken.getToken();
+        this.decoded_token = jtw_decode(this.access_token);
+        if(this.config.debug === true) { console.log(decoded_token.domid); }
 
-        const options = {
-            url: 'https://us-services.secureauth.com/oauth/v1/token?grant_type=client_credentials',
-            method: 'post',
-            auth: {
-                username: this.config.titanUser,
-                password: this.config.titanPass,
-                }
-            };
-        
-             const resp = await axios(options);
-             const decoded_token = jtw_decode(resp.data.access_token);
-            if(this.config.debug === true) { console.log(decoded_token.domid); }
+        let jsonResponse = {};
     
-             const options2 = {
-                url: 'https://' + decoded_token.domid + '.secureauth.com/mobilesvc/api/v1.0/user/'+apiEndPoint,
+             const options = {
+                url: 'https://' + this.decoded_token.domid + '.secureauth.com/mobilesvc/api/v1.0/user/'+apiEndPoint,
                 method: 'get',
                 headers: {
-                   'Authorization': 'Bearer ' +resp.data.access_token
+                   'Authorization': 'Bearer ' +this.access_token
                }
             }
 
-            await axios(options2).then(result => {
+            await axios(options).then(result => {
                 console.log(result.data);
                 jsonResponse = result.data;
             }).catch(error => {
@@ -120,31 +148,22 @@ class ApiClient {
 
     postMobileSvc = async (postData, endpointEnum) => {
 
-        let jsonResponse = {};
+        this.access_token = await this.titanToken.getToken();
+        this.decoded_token = jtw_decode(this.access_token);
+        if(this.config.debug === true) { console.log(decoded_token.domid); }
 
-        const options = {
-            url: 'https://us-services.secureauth.com/oauth/v1/token?grant_type=client_credentials',
-            method: 'post',
-            auth: {
-                username: this.config.titanUser,
-                password: this.config.titanPass,
-                }
-            };
-        
-             const resp = await axios(options);
-             const decoded_token = jtw_decode(resp.data.access_token);
-            if(this.config.debug === true) { console.log(decoded_token.domid); }
+        let jsonResponse = {};
     
-             const options2 = {
-                url: 'https://' + decoded_token.domid + '.secureauth.com/mobilesvc/api/v1.0/'+endpointEnum,
+             const options = {
+                url: 'https://' + this.decoded_token.domid + '.secureauth.com/mobilesvc/api/v1.0/'+endpointEnum,
                 method: 'post',
                 headers: {
-                   'Authorization': 'Bearer ' +resp.data.access_token
+                   'Authorization': 'Bearer ' +this.access_token
                },
                data: postData
             }
 
-            await axios(options2).then(result => {
+            await axios(options).then(result => {
                 console.log(result.data);
                 jsonResponse = result.data;
             }).catch(error => {

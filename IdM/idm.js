@@ -6,7 +6,7 @@ class IdmEndpoint {
 
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
         this.#endpointEnum = apiEndpointEnum.users;
      }
 

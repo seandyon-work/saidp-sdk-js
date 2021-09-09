@@ -14,7 +14,7 @@ class AuthEndpoint {
     
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
         this.#endpointEnum = apiEndpointEnum.auth;
      }
 

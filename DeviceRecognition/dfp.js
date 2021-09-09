@@ -8,7 +8,7 @@ class DfpEndpoint {
 
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
         this.#js = apiEndpointEnum.dfp_js;
         this.#validate = apiEndpointEnum.dfp_validate;
         this.#confirm = apiEndpointEnum.dfp_confirm;

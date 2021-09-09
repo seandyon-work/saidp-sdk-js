@@ -8,7 +8,7 @@ class AdaptiveEndpoint {
 
     constructor(apiClient, apiEndpointEnum) {
         // private
-        this.#client = new apiClient();
+        this.#client = apiClient;
         this.#adaptauth = apiEndpointEnum.adaptauth;
         this.#accesshistory = apiEndpointEnum.accesshistory;
         this.#ipeval = apiEndpointEnum.ipeval;
