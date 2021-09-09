@@ -56,4 +56,24 @@ router.get('/createuser', function(req, res) {
     api.profile.idm.createUser(m.profileProperties).then(request => res.json(request));
 });
 
+router.get('/user/:user/devices', function (req, res) {
+    api.enroll.getEnrollments(req.params.user).then(request => res.json(request));
+});
+
+router.get('/user/:user/devices/enroll/totp', function (req, res) {
+    let oathSeed = '4BVJDBWEVHIONNBMUMV52OJPO5RISDS7';
+    let deviceName = 'Example Hard Token';
+    api.enroll.enrollTOTP(req.params.user, oathSeed, deviceName).then(request => res.json(request));
+});
+
+router.get('/user/:user/devices/enroll/qrcode', function (req, res) {
+    api.enroll.generateQRCode(req.params.user).then(request => {
+        const img = Buffer.from(request.qrCodeBase64, 'base64');
+        res.writeHead(200, {'Content-Type':'image/png', 'Content-Length': img.length});
+        res.end(img);
+    });
+});
+
+
+
 module.exports = router

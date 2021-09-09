@@ -5,6 +5,7 @@ const { AuthEndpoint } = require('./Auth/auth');
 const { UserEndpoint } = require('./Profile/profile');
 const { DfpEndpoint } = require('./DeviceRecognition/dfp');
 const { AdaptiveEndpoint } = require('./Adaptive/adaptive');
+const { EnrollEndpoint } = require('./Enrollment/enroll');
 const { Models } = require('./models/models');
 
 class SecureAuth  {
@@ -14,6 +15,7 @@ class SecureAuth  {
         this.profile = new UserEndpoint(ApiClient, apiEndpointEnum);
         this.dfp = new DfpEndpoint(ApiClient, apiEndpointEnum);
         this.adaptive = new AdaptiveEndpoint(ApiClient, apiEndpointEnum);
+        this.enroll = new EnrollEndpoint(ApiClient, apiEndpointEnum);
         this.models = new Models();
     }
 }
