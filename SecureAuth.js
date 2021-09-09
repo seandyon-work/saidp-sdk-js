@@ -9,14 +9,16 @@ const { EnrollEndpoint } = require('./Enrollment/enroll');
 const { Models } = require('./models/models');
 
 class SecureAuth  {
+    // declaring private variables
+    #client = {};
     // constructor for the SecureAuth class
     constructor() {
-        this.apiClient = new ApiClient();
-        this.auth = new AuthEndpoint(this.apiClient, apiEndpointEnum);
-        this.profile = new UserEndpoint(this.apiClient, apiEndpointEnum);
-        this.dfp = new DfpEndpoint(this.apiClient, apiEndpointEnum);
-        this.adaptive = new AdaptiveEndpoint(this.apiClient, apiEndpointEnum);
-        this.enroll = new EnrollEndpoint(this.apiClient, apiEndpointEnum);
+        this.#client = new ApiClient();
+        this.auth = new AuthEndpoint(this.#client, apiEndpointEnum);
+        this.profile = new UserEndpoint(this.#client, apiEndpointEnum);
+        this.dfp = new DfpEndpoint(this.#client, apiEndpointEnum);
+        this.adaptive = new AdaptiveEndpoint(this.#client, apiEndpointEnum);
+        this.enroll = new EnrollEndpoint(this.#client, apiEndpointEnum);
         this.models = new Models();
     }
 }

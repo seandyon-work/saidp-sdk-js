@@ -76,16 +76,12 @@ class TitanToken {
                     
             const resp = await axios(options);
             const decoded_token = jtw_decode(resp.data.access_token);
-            console.log(resp.data);
+            if(this.config.debug === true) { console.log(resp.data); }
             this.token = resp.data.access_token;
             this.expire = moment(new Date()).add(resp.data.expires_in, 's');
-            console.log(this.expire.toDate())
+            if(this.config.debug === true) { console.log(this.expire.toDate()) }
         }
         return this.token;
-    }
-
-    validateToken() {
-
     }
 }
 
