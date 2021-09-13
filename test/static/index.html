@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="site.css" rel="stylesheet" type="text/css" media="all">
+    </head>
+    <body>
+        <div id="content" class="flex">
+            <div class="">
+                <div class="page-content page-container" id="page-content">
+                    <div class="padding">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header"><strong>Login to your account</strong></div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="form-group"><label class="text-muted" for="username">User ID</label><input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="User ID"> <small id="emailHelp" class="form-text text-muted">Enter valid User ID</small></div>
+                                            
+                                            <div class="form-group">
+                                                <input type="button" class="btn btn-primary" value="Login" id="btnLogin" />
+                                                <input type="button" class="btn btn-primary" value="Enroll Fido" id="btnEnroll" />
+                                              </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script>
+            $(function () {
+                $('#btnEnroll').click(function () {
+                    console.log("enroll");
+                    fetch("/api/user/"+$('#username').val()+"/devices/enroll/fido", {
+                        method: "GET"
+                    }).then(function (response) {
+                        response.json().then(beginEnrollment);
+                    });
+                });
+                $('#btnLogin').click(function () {
+                    fetch("/user/"+ $('#username').val()+"/devices/enroll/fido/complete", {
+                        method: "POST"
+                    }).then(function (response) {
+                        response.json().then(beginLogin);
+                    });
+                });
+                function toArray(value) {
+                    return Uint8Array.from(atob(value), c => c.charCodeAt(0));
+                }
+                function fromArray(value) {
+                    return btoa(String.fromCharCode.apply(null, new Uint8Array(value))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+                }
+                function beginEnrollment(pkOptions)
+                {
+                    console.log(pkOptions);
+                    pkOptions.publicKey.challenge = toArray(pkOptions.publicKey.challenge);
+                    pkOptions.publicKey.user.id = toArray(pkOptions.publicKey.user.id);
+                    navigator.credentials.create({
+                        publicKey: pkOptions.publicKey
+                    }).then(function (credential) {
+                        console.log("Credential generated");
+                        completeEnrollment(credential)
+                        console.log(credential)
+                    });
+                }
+                function completeEnrollment(credential)
+                {
+                    var clientDataJSON = fromArray(credential.response.clientDataJSON);
+                    var attestationObject = fromArray(credential.response.attestationObject);
+                    var rawId = fromArray(credential.rawId);
+                    var payload = {
+                        id: credential.id,
+                        description: 'yubikey',
+                        rawId: rawId,
+                        rp_id: credential.publicKey.rp.id,
+                        session_id: credential.session_id,
+                        type: credential.type,
+                        response: { attestationObject, clientDataJSON }
+                    }
+                    console.log(payload);
+                    fetch("/user/"+ $('#username').val()+"/devices/enroll/fido/complete", {
+                        method: "POST",
+                        body: JSON.stringify(payload),
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(function (response) {
+                        console.log(response);
+                        response.json().then(function (v) {
+                            alert(JSON.stringify(v));
+                        });
+                    });
+                }
+                function beginLogin(pkOptions) {
+                    console.log(pkOptions);
+                    pkOptions.publicKey.challenge = toArray(pkOptions.publicKey.challenge);
+                    console.log(pkOptions);
+                    navigator.credentials.get({
+                        publicKey: pkOptions.publicKey
+                    }).then(function (credential) {
+                        console.log("Credential read");
+                        finishLogin(credential)
+                    });
+                }
+                function completeLogin(credential) {
+                    var clientDataJSON = fromArray(credential.response.clientDataJSON);
+                    var authenticatorData = fromArray(credential.response.authenticatorData);
+                    var rawId = fromArray(credential.rawId);
+                    var signature = fromArray(credential.response.signature);
+                    var userHandle = fromArray(credential.response.userHandle);
+                    var payload = {
+                        id: credential.id,
+                        rawId: rawId,
+                        type: credential.type,
+                        response: {
+                            authenticatorData,
+                            clientDataJSON,
+                            signature,
+                            userHandle
+                        }
+                    }
+                    console.log(payload);
+                    var formValues = new FormData();
+                    formValues.append("formValues", JSON.stringify(payload));
+                    fetch("/api/fido/login/complete/", {
+                        method: "POST",
+                        body: formValues,
+                    }).then(function (response) {
+                        console.log(response);
+                        response.json().then(function (v) {
+                            alert(JSON.stringify(v));
+                        });
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -61,7 +61,7 @@ router.get('/user/:user/devices', function (req, res) {
 });
 
 router.get('/user/:user/devices/enroll/totp', function (req, res) {
-    let oathSeed = '4BVJDBWEVHIONNBMUMV52OJPO5RISDS7';
+    let oathSeed = '1AAAAAAAAAAAAAAAAAA22AAAA2AAAAA1';
     let deviceName = 'Example Hard Token';
     api.enroll.enrollTOTP(req.params.user, oathSeed, deviceName).then(request => res.json(request));
 });
@@ -74,6 +74,13 @@ router.get('/user/:user/devices/enroll/qrcode', function (req, res) {
     });
 });
 
+router.get('/user/:user/devices/enroll/fido', function (req, res) {
+    api.enroll.enrollFidoBegin(req.params.user, 'localhost').then(request => res.json(request));
+});
+
+router.post('/user/:user/devices/enroll/fido/complete', function (req, res) {
+    api.enroll.enrollFidoComplete(req.body).then(request => res.json(requset));
+});
 
 
 module.exports = router

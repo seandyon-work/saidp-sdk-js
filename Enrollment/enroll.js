@@ -40,6 +40,15 @@ class EnrollEndpoint {
         return response;
     }
 
+    enrollFidoBegin = async (user, rpid) => {
+        let postData = { rp_id: rpid, user_id: user }
+        return await this.#client.post(postData, 'fido/enrollment/begin');
+    }
+
+    enrollFidoComplete = async (postData) => {
+        return await this.#client.post(postData, 'fido/enrollment/complete');
+    }
+
 }
 
 module.exports = {
